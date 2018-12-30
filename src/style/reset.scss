@@ -1,0 +1,81 @@
+html,
+body,
+div,
+span,
+h1,
+p,
+a,
+strong,
+b,
+ol,
+ul,
+li,
+article,
+footer,
+header,
+nav,
+section {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+body {
+	font-family: 'Raleway', 'Lato', Helvetica, Arial, sans-serif;
+}
+article,
+footer,
+header,
+menu,
+nav,
+section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ul,
+ol {
+	padding-left: 30px;
+	margin-bottom: 25px;
+}
+li {
+	margin: 6px 0;
+}
+a {
+	text-decoration: none;
+	color: inherit;
+}
+strong {
+	font-weight: bold;
+	margin: 20px 0;
+}
+mark {
+	background-color: inherit;
+	color: $highlight;
+	font-size: 15px;
+}
+pre,
+pre code {
+	white-space: pre;
+	scrollbar-track-color: none;
+	-webkit-overflow-scrolling: touch;
+}
+article {
+	font-size: 15px;
+	line-height: 150%;
+	text-align: justify;
+}
+article > p {
+	margin-bottom: 20px;
+}
+::selection {
+	background: $highlight;
+	color: white;
+}
+::-moz-selection {
+	background: $highlight;
+	color: white;
+}

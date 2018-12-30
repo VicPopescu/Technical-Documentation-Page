@@ -1,0 +1,836 @@
+<html>
+	<head>
+		<title>Typescript Decorators</title>
+		<meta charset="UTF-8" />
+		<meta name="language" content="ENGLISH" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content="Technical Documentation Page" />
+		<meta name="author" content="Victor Popescu, nomevictor@gmail.com" />
+		<meta http-equiv="Cache-Control" content="no-cache" />
+		<link
+			rel="stylesheet"
+			href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+			integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+			crossorigin="anonymous"
+		/>
+		<link
+			href="https://fonts.googleapis.com/css?family=Lato:400,400i,700|Raleway:400,400i,700"
+			rel="stylesheet"
+		/>
+		<link rel="stylesheet" href="src/main.scss" />
+	</head>
+
+	<body>
+		<!-- NAVIGATION -->
+		<nav id="navbar" class="navbar">
+			<header class="nav-header">
+				<a href="#">Typescript Decorators</a>
+			</header>
+			<div class="toggle cursor-pointer" title="Toggle Menu">
+				<i class="fas fa-ellipsis-v"></i>
+			</div>
+			<ul class="nav-links">
+				<li><a class="nav-link" href="#Intro">Introduction</a></li>
+				<li><a class="nav-link" href="#Decorators">Decorators</a></li>
+				<li>
+					<a class="nav-link" href="#Decorator_Factories">
+						Decorator Factories
+					</a>
+				</li>
+				<li>
+					<a class="nav-link" href="#Decorator_Composition">
+						Decorator Composition
+					</a>
+				</li>
+				<li>
+					<a class="nav-link" href="#Decorator_Evaluation">
+						Decorator Evaluation
+					</a>
+				</li>
+				<li>
+					<a class="nav-link" href="#Class_Decorators">
+						Class Decorators
+					</a>
+				</li>
+				<li>
+					<a class="nav-link" href="#Method_Decorators">
+						Method Decorators
+					</a>
+				</li>
+				<li>
+					<a class="nav-link" href="#Accessor_Decorators">
+						Accessor Decorators
+					</a>
+				</li>
+				<li>
+					<a class="nav-link" href="#Property_Decorators">
+						Property Decorators
+					</a>
+				</li>
+				<li>
+					<a class="nav-link" href="#Parameter_Decorators">
+						Parameter Decorators
+					</a>
+				</li>
+				<li><a class="nav-link" href="#Metadata"> Metadata </a></li>
+				<li><a class="nav-link" href="#Reference"> Reference </a></li>
+			</ul>
+		</nav>
+
+		<!-- MAIN DOCUMENT -->
+		<main id="main-doc" class="main">
+			<header class="app-header"><h1>Typescript Decorators</h1></header>
+
+			<!-- INTRODUCTION -->
+			<section id="Intro" class="main-section">
+				<header class="section-header">Introduction</header>
+				<article>
+					<p>
+						With the introduction of Classes in TypeScript and ES6,
+						there now exist certain scenarios that require
+						additional features to support annotating or modifying
+						classes and class members. Decorators provide a way to
+						add both annotations and a meta-programming syntax for
+						class declarations and members. Decorators are a stage 2
+						proposal for JavaScript and are available as an
+						experimental feature of TypeScript.
+					</p>
+					<aside>
+						<p>
+							<i class="far fa-edit"></i> Decorators are an
+							experimental feature that may change in future
+							releases.
+						</p>
+					</aside>
+					<p>
+						To enable experimental support for decorators, you must
+						enable the <mark>experimentalDecorators</mark> compiler
+						option either on the command line or in your
+						<mark>tsconfig.json</mark>
+					</p>
+					<strong>Command Line:</strong>
+					<pre class="code-container"><code class="code">tsc --target ES5 --experimentalDecorators</code><span class="copyCode">COPY</span></pre>
+					<strong>tsconfig.json:</strong>
+					<pre class="mb-0 code-container"><code class="code">"compilerOptions": {
+					"target": "ES5",
+					"experimentalDecorators": true
+					}</code><span class="copyCode">COPY</span></pre>
+				</article>
+			</section>
+
+			<!-- DECORATORS -->
+			<section id="Decorators" class="main-section">
+				<header class="section-header">Decorators</header>
+				<article>
+					<p>
+						A <i>Decorator</i> is a special kind of declaration that
+						can be attached to a class declaration, method,
+						accessor, property, or parameter. Decorators use the
+						form <mark>@expression</mark>, where
+						<mark>expression</mark> must evaluate to a function that
+						will be called at runtime with information about the
+						decorated declaration.
+					</p>
+					<p>
+						For example, given the decorator <mark>@sealed</mark> we
+						might write the <mark>sealed</mark> function as follows:
+					</p>
+					<pre class="code-container"><code class="code">function sealed(target) {
+						 // do something with 'target' ...
+					}</code><span class="copyCode">COPY</span></pre>
+					<aside class="mb-0">
+						<p>
+							<i class="far fa-edit"></i> You can see a more
+							detailed example of a decorator in
+							<a href="#Class_Decorators">Class Decorators</a>,
+							below.
+						</p>
+					</aside>
+				</article>
+			</section>
+
+			<!-- DECORATORS FACTORIES -->
+			<section id="Decorator_Factories" class="main-section">
+				<header class="section-header">Decorator Factories</header>
+				<article>
+					<p>
+						If we want to customize how a decorator is applied to a
+						declaration, we can write a decorator factory. A
+						<i>Decorator Factory</i> is simply a function that
+						returns the expression that will be called by the
+						decorator at runtime.
+					</p>
+					<p>
+						We can write a decorator factory in the following
+						fashion:
+					</p>
+					<pre class="code-container"><code class="code">function color(value: string) { // this is the decorator factory
+						 return function (target) { // this is the decorator
+						     // do something with 'target' and 'value'...
+						 }
+					}</code><span class="copyCode">COPY</span></pre>
+					<aside class="mb-0">
+						<p>
+							<i class="far fa-edit"></i> You can see a more
+							detailed example of a decorator factory in
+							<a href="#Method_Decorators">Method Decorators</a>,
+							below.
+						</p>
+					</aside>
+				</article>
+			</section>
+
+			<!-- DECORATOR COMPOSITION -->
+			<section id="Decorator_Composition" class="main-section">
+				<header class="section-header">Decorator Composition</header>
+				<article>
+					<p>
+						Multiple decorators can be applied to a declaration, as
+						in the following examples:
+					</p>
+					<ul>
+						<li>
+							<p>On a single line:</p>
+							<pre class="code-container"><code class="code">@f @g x</code><span class="copyCode">COPY</span></pre>
+						</li>
+						<li>
+							<p>On multiple lines:</p>
+							<pre class="code-container"><code class="code">@f<br>@g<br>x</code><span class="copyCode">COPY</span></pre>
+						</li>
+					</ul>
+					<p>
+						When multiple decorators apply to a single declaration,
+						their evaluation is similar to function composition in
+						mathematics. In this model, when composing functions
+						<i>f</i> and <i>g</i>, the resulting composite
+						<i>(f ∘ g)(x)</i> is equivalent to <i>f(g(x))</i>.
+					</p>
+					<p>
+						As such, the following steps are performed when
+						evaluating multiple decorators on a single declaration
+						in TypeScript:
+					</p>
+					<ol>
+						<li>
+							The expressions for each decorator are evaluated
+							top-to-bottom.
+						</li>
+						<li>
+							The results are then called as functions from
+							bottom-to-top.
+						</li>
+					</ol>
+					<p>
+						If we were to use
+						<a href="#Decorator_Factories">decorator factories</a>,
+						we can observe this evaluation order with the following
+						example:
+					</p>
+					<pre class="code-container"><code class="code">function f() {
+						console.log("f(): evaluated");
+						return function (target, propertyKey: string, descriptor: PropertyDescriptor) {
+						     console.log("f(): called");
+						}
+					}
+					<br>function g() {
+						console.log("g(): evaluated");
+						return function (target, propertyKey: string, descriptor: PropertyDescriptor) {
+						     console.log("g(): called");
+						}
+					}
+					 <br>class C {
+						@f()
+						@g()
+						method() {}
+					}</code><span class="copyCode">COPY</span></pre>
+					<p>Which would print this output to the console:</p>
+					<pre class="mb-0 code-container"><code class="code">f(): evaluated <br>g(): evaluated <br>g(): called <br>f(): called</code><span class="copyCode">COPY</span></pre>
+				</article>
+			</section>
+
+			<!-- DECORATOR EVALUATION -->
+			<section id="Decorator_Evaluation" class="main-section">
+				<header class="section-header">Decorator Evaluation</header>
+				<article>
+					<p>
+						There is a well defined order to how decorators applied
+						to various declarations inside of a class are applied:
+					</p>
+					<ol class="mb-0">
+						<li>
+							<i>Parameter Decorators</i>, followed by
+							<i>Method, Accessor</i>, or
+							<i>Property Decorators</i> are applied for each
+							instance member.
+						</li>
+						<li>
+							<i>Parameter Decorators</i>, followed by
+							<i>Method, Accessor</i>, or
+							<i>Property Decorators</i> are applied for each
+							static member.
+						</li>
+						<li>
+							<i>Parameter Decorators</i> are applied for the
+							constructor.
+						</li>
+						<li>
+							<i>Class Decorators</i> are applied for the class.
+						</li>
+					</ol>
+				</article>
+			</section>
+
+			<!-- CLASS DECORATORS -->
+			<section id="Class_Decorators" class="main-section">
+				<header class="section-header">Class Decorators</header>
+				<article>
+					<p>
+						A <i>Class Decorator</i> is declared just before a class
+						declaration. The class decorator is applied to the
+						constructor of the class and can be used to observe,
+						modify, or replace a class definition. A class decorator
+						cannot be used in a declaration file, or in any other
+						ambient context (such as on a
+						<mark>declare</mark> class).
+					</p>
+					<p>
+						The expression for the class decorator will be called as
+						a function at runtime, with the constructor of the
+						decorated class as its only argument.
+					</p>
+					<p>
+						If the class decorator returns a value, it will replace
+						the class declaration with the provided constructor
+						function.
+					</p>
+					<aside>
+						<p>
+							<i class="far fa-edit"></i> Should you chose to
+							return a new constructor function, you must take
+							care to maintain the original prototype. The logic
+							that applies decorators at runtime will
+							<strong>not</strong> do this for you.
+						</p>
+					</aside>
+					<p>
+						The following is an example of a class decorator
+						(<mark>@sealed</mark>) applied to the
+						<mark>Greeter</mark> class:
+					</p>
+					<pre class="code-container"><code class="code">@sealed<br>class Greeter {
+						greeting: string;
+						constructor(message: string) {
+						   this.greeting = message;
+						 }
+						 greet() {
+						   return "Hello, " + this.greeting;
+						 }
+					}</code><span class="copyCode">COPY</span></pre>
+					<p>
+						We can define the <mark>@sealed</mark> decorator using
+						the following function declaration:
+					</p>
+					<pre class="code-container"><code class="code">function sealed(constructor: Function) {
+					     Object.seal(constructor);
+					     Object.seal(constructor.prototype);
+					}</code><span class="copyCode">COPY</span></pre>
+					<p>
+						When <mark>@sealed</mark> is executed, it will seal both
+						the constructor and its prototype.
+					</p>
+					<p>
+						Next we have an example of how to override the
+						constructor.
+					</p>
+					<pre class="mb-0 code-container"><code class="code">function classDecorator&lt;T extends {new(...args:any[]):{}}&gt;(constructor:T) {
+						 return class extends constructor {
+						     newProperty = "new property";
+						     hello = "override";
+						 }
+					}<br><br>@classDecorator<br>class Greeter {
+						property = "property";
+						hello: string;
+						 constructor(m: string) {
+						     this.hello = m;
+						 }
+					}<br>console.log(new Greeter("world"));</code><span class="copyCode">COPY</span></pre>
+				</article>
+			</section>
+
+			<!-- METHOD DECORATORS -->
+			<section id="Method_Decorators" class="main-section">
+				<header class="section-header">Method Decorators</header>
+				<article>
+					<p>
+						A <i>Method Decorator</i> is declared just before a
+						method declaration. The decorator is applied to the
+						<i>Property Descriptor</i> for the method, and can be
+						used to observe, modify, or replace a method definition.
+						A method decorator cannot be used in a declaration file,
+						on an overload, or in any other ambient context (such as
+						in a <mark>declare</mark> class).
+					</p>
+					<p>
+						The expression for the method decorator will be called
+						as a function at runtime, with the following three
+						arguments:
+					</p>
+					<ol>
+						<li>
+							Either the constructor function of the class for a
+							static member, or the prototype of the class for an
+							instance
+						</li>
+						<li>The name of the member.</li>
+						<li>The <i>Property Descriptor</i> for the member.</li>
+					</ol>
+					<aside>
+						<p>
+							<i class="far fa-edit"></i> The
+							<i>Property Descriptor</i> will be
+							<mark>undefined</mark> if your script target is less
+							than <mark>ES5.</mark>
+						</p>
+					</aside>
+					<p>
+						If the method decorator returns a value, it will be used
+						as the Property Descriptor for the method.
+					</p>
+					<aside>
+						<p>
+							<i class="far fa-edit"></i> The return value is
+							ignored if your script target is less than
+							<mark>ES5</mark>.
+						</p>
+					</aside>
+					<p>
+						The following is an example of a method decorator
+						(<mark>@enumerable</mark>) applied to a method on the
+						<mark>Greeter</mark> class:
+					</p>
+					<pre class="code-container"><code class="code">class Greeter {
+						 greeting: string;
+						 constructor(message: string) {
+						     this.greeting = message;
+						 }
+						 @enumerable(false)
+						 greet() {
+						     return "Hello, " + this.greeting;
+						 }
+					}</code><span class="copyCode">COPY</span></pre>
+					<p>
+						We can define the <mark>@enumerable</mark> decorator
+						using the following function declaration:
+					</p>
+					<pre class="code-container"><code class="code">function enumerable(value: boolean) {
+						 return function (target: any, propertyKey: string, descriptor: PropertyDescriptor){
+						     descriptor.enumerable = value;
+							}
+					}</code><span class="copyCode">COPY</span></pre>
+					<p class="mb-0">
+						The <mark>@enumerable(false)</mark> decorator here is a
+						<a href="#Decorator_Factories">decorator factory</a>.
+						When the <mark>@enumerable(false)</mark> decorator is
+						called, it modifies the <mark>enumerable</mark> property
+						of the property descriptor.
+					</p>
+				</article>
+			</section>
+
+			<!-- ACCESSOR DECORATORS -->
+			<section id="Accessor_Decorators" class="main-section">
+				<header class="section-header">Accessor Decorators</header>
+				<article>
+					<p>
+						An <i>Accessor Decorator</i> is declared just before an
+						accessor declaration. The accessor decorator is applied
+						to the <i>Property Descriptor</i> for the accessor and
+						can be used to observe, modify, or replace an accessor’s
+						definitions. An accessor decorator cannot be used in a
+						declaration file, or in any other ambient context (such
+						as in a <mark>declare</mark> class).
+					</p>
+					<aside>
+						<p>
+							<i class="far fa-edit"></i> TypeScript disallows
+							decorating both the <mark>get</mark> and
+							<mark>set</mark> accessor for a single member.
+							Instead, all decorators for the member must be
+							applied to the first accessor specified in document
+							order. This is because decorators apply to a
+							<i>Property Descriptor</i>, which combines both the
+							<mark>get</mark> and <mark>set</mark> accessor, not
+							each declaration separately.
+						</p>
+					</aside>
+					<p>
+						The expression for the accessor decorator will be called
+						as a function at runtime, with the following three
+						arguments:
+					</p>
+					<ol>
+						<li>
+							Either the constructor function of the class for a
+							static member, or the prototype of the class for an
+							instance member.
+						</li>
+						<li>The name of the member.</li>
+						<li>The <i>Property Descriptor</i> for the member.</li>
+					</ol>
+					<aside>
+						<p>
+							<i class="far fa-edit"></i> The
+							<i>Property Descriptor</i> will be
+							<mark>undefined</mark> if your script target is less
+							than <mark>ES5</mark>.
+						</p>
+					</aside>
+					<p>
+						If the accessor decorator returns a value, it will be
+						used as the <i>Property Descriptor</i> for the member.
+					</p>
+					<aside>
+						<p>
+							<i class="far fa-edit"></i> The return value is
+							ignored if your script target is less than
+							<mark>ES5</mark>.
+						</p>
+					</aside>
+					<p>
+						The following is an example of an accessor decorator
+						(<mark>@configurable</mark>) applied to a member of the
+						<mark>Point</mark> class:
+					</p>
+					<pre class="code-container"><code class="code">class Point {
+						 private _x: number;
+						 private _y: number;
+						 constructor(x: number, y: number) {
+						     this._x = x;
+						     this._y = y;
+						 }
+
+						 @configurable(false)
+						 get x() { return this._x; }
+
+						 @configurable(false)
+						 get y() { return this._y; }
+					}</code><span class="copyCode">COPY</span></pre>
+					<p>
+						We can define the <mark>@configurable</mark> decorator
+						using the following function declaration:
+					</p>
+					<pre class="mb-0 code-container"><code class="code">function configurable(value: boolean) {
+						 return function (target: any, propertyKey: string, descriptor: PropertyDescriptor){
+						     descriptor.configurable = value;
+						 }
+					}</code><span class="copyCode">COPY</span></pre>
+				</article>
+			</section>
+
+			<!-- PROPERTY DECORATORS -->
+			<section id="Property_Decorators" class="main-section">
+				<header class="section-header">Property Decorators</header>
+				<article>
+					<p>
+						A <i>Property Decorator</i> is declared just before a
+						property declaration. A property decorator cannot be
+						used in a declaration file, or in any other ambient
+						context (such as in a <mark>declare</mark> class).
+					</p>
+					<p>
+						The expression for the property decorator will be called
+						as a function at runtime, with the following two
+						arguments:
+					</p>
+					<ol>
+						<li>
+							Either the constructor function of the class for a
+							static member, or the prototype of the class for an
+							instance member.
+						</li>
+						<li>The name of the member.</li>
+					</ol>
+					<aside>
+						<p>
+							<i class="far fa-edit"></i> A
+							<i>Property Descriptor</i> is not provided as an
+							argument to a property decorator due to how property
+							decorators are initialized in TypeScript. This is
+							because there is currently no mechanism to describe
+							an instance property when defining members of a
+							prototype, and no way to observe or modify the
+							initializer for a property. The return value is
+							ignored too. As such, a property decorator can only
+							be used to observe that a property of a specific
+							name has been declared for a class.
+						</p>
+					</aside>
+					<p>
+						We can use this information to record metadata about the
+						property, as in the following example:
+					</p>
+					<pre class="code-container"><code class="code">class Greeter { 
+						@format("Hello, %s") 
+						greeting: string; 
+						
+						constructor(message: string) { 
+						     this.greeting = message; 
+						}
+						greet() { 
+						     let formatString = getFormat(this, "greeting"); 
+						     return formatString.replace("%s", this.greeting); 
+						} 
+					}</code><span class="copyCode">COPY</span></pre>
+					<p>
+						We can then define the <mark>@format</mark> decorator
+						and <mark>getFormat</mark> functions using the following
+						function declarations:
+					</p>
+					<pre class="code-container"><code class="code">import "reflect-metadata";
+					<br>const formatMetadataKey = Symbol("format");
+					<br>function format(formatString: string) {
+					     return Reflect.metadata(formatMetadataKey, formatString);
+					}
+					<br>function getFormat(target: any, propertyKey: string) {
+					     return Reflect.getMetadata(formatMetadataKey, target, propertyKey);
+					}</code><span class="copyCode">COPY</span></pre>
+					<p>
+						The <mark>@format("Hello, %s")</mark> decorator here is
+						a decorator factory. When
+						<mark>@format("Hello, %s")</mark> is called, it adds a
+						metadata entry for the property using the
+						<mark>Reflect.metadata</mark> function from the
+						<mark>reflect-metadata</mark> library. When
+						<mark>getFormat</mark> is called, it reads the metadata
+						value for the format.
+					</p>
+					<aside class="mb-0">
+						<p>
+							<i class="far fa-edit"></i> This example requires
+							the <mark>reflect-metadata</mark> library. See
+							Metadata for more information about the
+							<mark>reflect-metadata</mark> library.
+						</p>
+					</aside>
+				</article>
+			</section>
+
+			<!-- PARAMETER DECORATORS -->
+			<section id="Parameter_Decorators" class="main-section">
+				<header class="section-header">Parameter Decorators</header>
+				<article>
+					<p>
+						A <i>Parameter Decorator</i> is declared just before a
+						parameter declaration. The parameter decorator is
+						applied to the function for a class constructor or
+						method declaration. A parameter decorator cannot be used
+						in a declaration file, an overload, or in any other
+						ambient context (such as in a
+						<mark>declare</mark> class).
+					</p>
+					<p>
+						The expression for the parameter decorator will be
+						called as a function at runtime, with the following
+						three arguments:
+					</p>
+					<ol>
+						<li>
+							Either the constructor function of the class for a
+							static member, or the prototype of the class for an
+							instance
+						</li>
+						<li>The name of the member</li>
+						<li>
+							The ordinal index of the parameter in the function’s
+							parameter list
+						</li>
+					</ol>
+					<aside>
+						<p>
+							<i class="far fa-edit"></i> A parameter decorator
+							can only be used to observe that a parameter has
+							been declared on a method.
+						</p>
+					</aside>
+					<p>
+						The return value of the parameter decorator is ignored.
+					</p>
+					<p>
+						The following is an example of a parameter decorator
+						(<mark>@required</mark>) applied to parameter of a
+						member of the <mark>Greeter</mark> class:
+					</p>
+					<pre class="code-container"><code class="code">class Greeter {
+						 greeting: string;
+
+						 constructor(message: string) {
+						     this.greeting = message;
+						 }
+
+						 @validate
+						 greet(@required name: string) {
+						     return "Hello " + name + ", " + this.greeting;
+						 }
+					}</code><span class="copyCode">COPY</span></pre>
+					<p>
+						We can then define the <mark>@required</mark> and
+						<mark>@validate</mark> decorators using the following
+						function declarations:
+					</p>
+					<pre class="code-container"><code class="code">import "reflect-metadata";
+					<br>const requiredMetadataKey = Symbol("required");
+					<br>function required(target: Object, propertyKey: string | symbol, parameterIndex: number){
+					     let existingRequiredParameters: number[] = Reflect.getOwnMetadata(requiredMetadataKey, target, propertyKey) || [];
+					     existingRequiredParameters.push(parameterIndex);
+					     Reflect.defineMetadata(requiredMetadataKey, existingRequiredParameters, target, propertyKey);
+					}
+					<br>function validate(target: any, propertyName: string, descriptor: TypedPropertyDescriptor&lt;Function&gt;) {
+					     let method = descriptor.value;
+					     descriptor.value = function () {
+						          let requiredParameters: number[] = Reflect.getOwnMetadata(requiredMetadataKey, target, propertyName);
+						          if (requiredParameters) {
+							              for (let parameterIndex of requiredParameters) {
+								                     if (parameterIndex >= arguments.length || arguments[parameterIndex] === undefined) {
+									                         throw new Error("Missing required argument.");
+									                    }
+									            }
+							          }
+							         return method.apply(this, arguments);
+						    }
+					}</code><span class="copyCode">COPY</span></pre>
+					<p>
+						The <mark>@required</mark> decorator adds a metadata
+						entry that marks the parameter as required. The
+						<mark>@validate</mark> decorator then wraps the existing
+						<mark>greet</mark> method in a function that validates
+						the arguments before invoking the original method.
+					</p>
+					<aside class="mb-0">
+						<p>
+							<i class="far fa-edit"></i> This example requires
+							the <mark>reflect-metadata</mark> library. See
+							Metadata for more information about the
+							<mark>reflect-metadata</mark> library.
+						</p>
+					</aside>
+				</article>
+			</section>
+
+			<!-- METADATA -->
+			<section id="Metadata" class="main-section">
+				<header class="section-header">Metadata</header>
+				<article>
+					<p>
+						Some examples use the
+						<mark>reflect-metadata</mark> library which adds a
+						polyfill for an experimental metadata API. This library
+						is not yet part of the ECMAScript (JavaScript) standard.
+						However, once decorators are officially adopted as part
+						of the ECMAScript standard these extensions will be
+						proposed for adoption.
+					</p>
+					<p>You can install this library via npm:</p>
+					<pre class="code-container"><code class="code">npm i reflect-metadata --save</code><span class="copyCode">COPY</span></pre>
+					<p>
+						TypeScript includes experimental support for emitting
+						certain types of metadata for declarations that have
+						decorators. To enable this experimental support, you
+						must set the <mark>emitDecoratorMetadata</mark> compiler
+						option either on the command line or in your
+						<mark>tsconfig.json</mark>
+					</p>
+					<strong>tsconfig.json:</strong>
+					<pre class="code-container"><code class="code">"compilerOptions": {
+					 "target": "ES5",
+					 "experimentalDecorators": true,
+					 "emitDecoratorMetadata": true
+					}</code><span class="copyCode">COPY</span></pre>
+					<p>
+						When enabled, as long as the
+						<mark>reflect-metadata</mark> library has been imported,
+						additional design-time type information will be exposed
+						at runtime.
+					</p>
+					<p>We can see this in action in the following example:</p>
+					<pre class="code-container"><code class="code">import "reflect-metadata";
+					<br>class Point {
+						x: number;
+						y: number;
+					}
+					<br>class Line {
+						 private _p0: Point;
+						 private _p1: Point;
+
+						 @validate
+						 set p0(value: Point) { this._p0 = value; }
+						 get p0() { return this._p0; }
+
+						 @validate
+						 set p1(value: Point) { this._p1 = value; }
+						 get p1() { return this._p1; }
+					}
+					<br>function validate&lt;T&gt;(target: any, propertyKey: string, descriptor: TypedPropertyDescriptor&lt;T&gt;) {
+						 let set = descriptor.set;
+						 descriptor.set = function (value: T) {
+						     let type = Reflect.getMetadata("design:type", target, propertyKey);
+						     if (!(value instanceof type)) {
+							          throw new TypeError("Invalid type.");
+							    }
+							    set(value);
+						 }
+					}</code><span class="copyCode">COPY</span></pre>
+					<p>
+						The TypeScript compiler will inject design-time type
+						information using the
+						<mark>@Reflect.metadata</mark> decorator. You could
+						consider it the equivalent of the following TypeScript:
+					</p>
+					<pre class="code-container"><code class="code">class Line {
+						 private _p0: Point;
+						 private _p1: Point;
+
+						 @validate
+						 @Reflect.metadata("design:type", Point)
+						 set p0(value: Point) { this._p0 = value; }
+						 get p0() { return this._p0; }
+
+						 @validate
+						 @Reflect.metadata("design:type", Point)
+						 set p1(value: Point) { this._p1 = value; }
+						 get p1() { return this._p1; }
+					}</code><span class="copyCode">COPY</span></pre>
+					<aside class="mb-0">
+						<p>
+							<i class="far fa-edit"></i> Decorator metadata is an
+							experimental feature and may introduce breaking
+							changes in future releases.
+						</p>
+					</aside>
+				</article>
+			</section>
+
+			<!-- REFERENCE -->
+			<section id="Reference" class="main-section">
+				<header class="section-header">Reference</header>
+				<article>
+					<p>All the documentation in this page is taken from:</p>
+					<a
+						href="https://www.typescriptlang.org/docs/handbook/decorators.html"
+						target="_blank"
+					>
+						<mark> <u>Typescriptlang</u> </mark>
+					</a>
+				</article>
+			</section>
+			<a
+				class="copyright"
+				href="https://codepen.io/VicPopescu/"
+				target="_blank"
+			>
+				Victor Popescu. December 2018. No rights reserved.
+			</a>
+		</main>
+
+		<script src="src/index.ts"></script>
+	</body>
+</html>
